@@ -58,18 +58,48 @@ ul.list{list-style:"👤 ";padding-left:18px}
 .admin-controls button{margin:2px;padding:4px 6px;border:none;border-radius:4px;background:#e63946;color:#fff;cursor:pointer}
 .admin-controls button:hover{background:#d62828}
 .error{color:#b71c1c;margin-top:6px;}
-#loader{
-  position:fixed;top:0;left:0;width:100%;height:100%;
-  background:#fff;display:flex;align-items:center;justify-content:center;
-  font-size:24px;color:var(--primary);z-index:9999;
-  animation:fadeIn 0.5s;
+.hidden{display:none;}
+/* --- Loader --- */
+#loader {
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background:#fff;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  z-index:9999;
 }
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.loader-bar-container {
+  width: 60%;
+  height: 12px;
+  background: #ddd;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.loader-bar {
+  width: 0%;
+  height: 100%;
+  background: var(--primary);
+  animation: loading 2s linear forwards;
+}
+@keyframes loading {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+#loader p {
+  font-size: 16px;
+  color: var(--primary-dark);
+  margin:0;
+}
 </style>
 </head>
 <body>
 
-<div id="loader">Ładowanie strony...</div>
+<div id="loader">
+  <div class="loader-bar-container">
+    <div class="loader-bar" id="loaderBar"></div>
+  </div>
+  <p>Ładowanie strony...</p>
+</div>
 
 <header>
   <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Herb_Polski.svg" alt="Godło">
@@ -191,8 +221,8 @@ ul.list{list-style:"👤 ";padding-left:18px}
 </footer>
 
 <script>
-// --- Ładowanie strony ---
-window.addEventListener("load", () => {document.getElementById("loader").style.display="none";});
+// --- Loader ---
+window.addEventListener("load", () => {setTimeout(()=>document.getElementById("loader").style.display="none",200);});
 
 // --- STORAGE ---
 let aktualnosci = JSON.parse(localStorage.getItem("aktualnosci")||"[]");
@@ -201,40 +231,23 @@ let obywatele = JSON.parse(localStorage.getItem("obywatele")||"[]");
 let rekrutacje = JSON.parse(localStorage.getItem("rekrutacje")||"[]");
 let galeria = JSON.parse(localStorage.getItem("galeria")||"[]");
 
-// --- FUNKCJE ---
+// --- SEKCJE ---
 function showSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
+// --- ESCAPE ---
 function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
 
-function renderAktualnosci(){
-  const el=document.getElementById("aktualnosciLista");
-  el.innerHTML = aktualnosci.length===0 ? "<p>Brak aktualności.</p>" : aktualnosci.map(n=>`<article class="news"><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml(n.text)}</p></article>`).join("");
-}
-function renderOgloszenia(){
-  const el=document.getElementById("adminOgloszeniaList");
-  el.innerHTML = ogloszenia.length===0 ? "<p>Brak ogłoszeń.</p>" : ogloszenia.map((o,i)=>`<div class="admin-item">${escapeHtml(o)}<div class="admin-controls"><button onclick="adminDeleteOgloszenie(${i})">Usuń</button></div></div>`).join("");
-}
-function renderObywatele(){
-  const el=document.getElementById("obywateleLista");
-  el.innerHTML = obywatele.length===0 ? "<p>Brak obywateli.</p>" : obywatele.map(u=>`<li>${escapeHtml(u.nick)} <span class="muted">(${escapeHtml(u.role||'Obywatel')})</span></li>`).join("");
-}
-function renderGaleria(){
-  const el=document.getElementById("galeriaZdjecia");
-  el.innerHTML = galeria.length===0 ? "<p>Brak zdjęć.</p>" : galeria.map(src=>`<img src="${src}" alt="Zdjęcie">`).join("");
-}
-function renderHome(){
-  const homeO=document.getElementById("homeOgloszenia");
-  homeO.innerHTML = ogloszenia.length===0 ? "<p>Brak ogłoszeń.</p>" : ogloszenia.map(o=>`<div class="card">${escapeHtml(o)}</div>`).join("");
-  const homeA=document.getElementById("homeAktualnosci");
-  homeA.innerHTML = aktualnosci.length===0 ? "<p>Brak aktualności.</p>" : aktualnosci.map(n=>`<div class="card"><strong>${escapeHtml(n.title)}</strong><p>${escapeHtml(n.text)}</p></div>`).join("");
-}
+// --- RENDER ---
+function renderAktualnosci(){const el=document.getElementById("aktualnosciLista");el.innerHTML = aktualnosci.length===0 ? "<p>Brak aktualności.</p>" : aktualnosci.map(n=>`<article class="news"><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml(n.text)}</p></article>`).join("");}
+function renderOgloszenia(){const el=document.getElementById("adminOgloszeniaList");el.innerHTML = ogloszenia.length===0 ? "<p>Brak ogłoszeń.</p>" : ogloszenia.map((o,i)=>`<div class="admin-item">${escapeHtml(o)}<div class="admin-controls"><button onclick="adminDeleteOgloszenie(${i})">Usuń</button></div></div>`).join("");}
+function renderObywatele(){const el=document.getElementById("obywateleLista");el.innerHTML = obywatele.length===0 ? "<p>Brak obywateli.</p>" : obywatele.map(u=>`<li>${escapeHtml(u.nick)} <span class="muted">(${escapeHtml(u.role||'Obywatel')})</span></li>`).join("");}
+function renderGaleria(){const el=document.getElementById("galeriaZdjecia");el.innerHTML = galeria.length===0 ? "<p>Brak zdjęć.</p>" : galeria.map(src=>`<img src="${src}" alt="Zdjęcie">`).join("");}
+function renderHome(){const homeO=document.getElementById("homeOgloszenia");homeO.innerHTML = ogloszenia.length===0 ? "<p>Brak ogłoszeń.</p>" : ogloszenia.map(o=>`<div class="card">${escapeHtml(o)}</div>`).join("");const homeA=document.getElementById("homeAktualnosci");homeA.innerHTML = aktualnosci.length===0 ? "<p>Brak aktualności.</p>" : aktualnosci.map(n=>`<div class="card"><strong>${escapeHtml(n.title)}</strong><p>${escapeHtml(n.text)}</p></div>`).join("");}
 function renderAdminLists(){
-  renderAktualnosci();
-  renderOgloszenia();
-  renderHome();
+  renderAktualnosci(); renderOgloszenia(); renderHome();
   const usersDiv=document.getElementById("adminUsersList");
   usersDiv.innerHTML=obywatele.map((u,i)=>`<div class="admin-item">${escapeHtml(u.nick)} — ${escapeHtml(u.role||'Obywatel')}<div class="admin-controls"><button onclick="adminEditUser(${i})">Edytuj</button><button onclick="adminRemoveUser(${i})">Usuń</button></div></div>`).join("")||"<p>Brak użytkowników.</p>";
   const rekrutDiv=document.getElementById("adminRekrutList");
@@ -277,7 +290,7 @@ if(sessionStorage.getItem("ownerOpen")==="true"){
   renderAdminLists();
 }
 
-// --- ADMIN FUNKCJE ---
+// --- FUNKCJE ADMIN ---
 function isDesktop(){return window.innerWidth>=1024;}
 function adminAddNews(){if(!isDesktop()){alert("Dodawanie aktualności tylko z komputera!"); return;} const t=document.getElementById("newsTitle").value.trim(); const x=document.getElementById("newsText").value.trim(); if(!t||!x)return alert("Uzupełnij tytuł i treść"); aktualnosci.unshift({title:t,text:x}); localStorage.setItem("aktualnosci",JSON.stringify(aktualnosci)); renderAdminLists(); document.getElementById("newsTitle").value=""; document.getElementById("newsText").value="";}
 function adminAddOgloszenie(){if(!isDesktop()){alert("Dodawanie ogłoszeń tylko z komputera!"); return;} const t=document.getElementById("announceText").value.trim(); if(!t)return alert("Wpisz treść"); ogloszenia.unshift(t); localStorage.setItem("ogloszenia",JSON.stringify(ogloszenia)); renderAdminLists(); document.getElementById("announceText").value="";}
@@ -293,5 +306,6 @@ function ownerLogout(){sessionStorage.removeItem("ownerOpen");document.getElemen
 // --- INITIAL RENDER ---
 renderAktualnosci(); renderOgloszenia(); renderHome(); renderObywatele(); renderGaleria(); renderAdminLists();
 </script>
+
 </body>
 </html>
