@@ -5,29 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rekrutacja RP</title>
 <link rel="stylesheet" href="style.css">
+<script defer src="script.js"></script>
 </head>
 <body>
-<header>
-<h1>Rekrutacja na serwer RP</h1>
-<a href="index.html" class="btn">Wróć na stronę główną</a>
-</header>
-
+<header><h1>Rekrutacja do RP</h1></header>
+<nav>
+  <a href="index.html">Strona główna</a>
+  <a href="aktualnosci.html">Aktualności</a>
+  <a href="obywatele.html">Obywatele</a>
+</nav>
 <main>
-<h2>Formularz rekrutacyjny</h2>
-<form id="rekrutacjaForm">
-<label>Nick Roblox:</label>
-<input type="text" id="rekrutNick" required>
-<label>Dlaczego chcesz dołączyć?</label>
-<textarea id="rekrutText" rows="4" required></textarea>
-<button type="submit" class="btn">Wyślij rekrutację</button>
-</form>
-<p id="rekrutMessage"></p>
+  <form id="rekrutacjaForm">
+    <label>Nick w grze:</label>
+    <input id="rekrutNick" required>
+    <label>Dlaczego chcesz dołączyć:</label>
+    <textarea id="rekrutText" required></textarea>
+    <button type="submit">Wyślij rekrutację</button>
+  </form>
+  <p id="rekrutMessage"></p>
 </main>
-
-<script src="script.js"></script>
-<script>
-// Formularz rekrutacyjny
-document.getElementById("rekrutacjaForm").addEventListener("submit", submitRekrutacja);
-</script>
+<footer><p>© 2025 RP</p></footer>
 </body>
 </html>
