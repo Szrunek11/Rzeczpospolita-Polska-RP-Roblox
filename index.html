@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rzeczpospolita Polska RP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<h1>🇵🇱 Rzeczpospolita Polska RP</h1>
+<nav>
+<a href="index.html">Strona główna</a>
+<a href="rekrutacja.html" class="btn">Rekrutacja</a>
+<a href="#login">Logowanie/Rejestracja</a>
+<a href="admin.html" class="btn">Panel Właściciela</a>
+</nav>
+</header>
+
+<main>
+<section id="home">
+<h2>Witaj w RP Polska Roleplay!</h2>
+<p>Dołącz do naszej społeczności i sprawdź aktualne ogłoszenia!</p>
+<a href="https://example.com" class="btn">Dołącz na Discord</a>
+</section>
+
+<section id="ogloszenia">
+<h2>Aktualne ogłoszenia:</h2>
+<ul id="ogloszenia-lista"></ul>
+</section>
+
+<section id="login">
+<h2>Rejestracja konta</h2>
+<form id="registerForm">
+<label>Nick:</label>
+<input type="text" id="regNick" required>
+<label>Hasło:</label>
+<input type="password" id="regPassword" required>
+<button type="submit" class="btn">Zarejestruj się</button>
+</form>
+
+<h2>Logowanie</h2>
+<form id="loginForm">
+<label>Nick:</label>
+<input type="text" id="nick" required>
+<label>Hasło:</label>
+<input type="password" id="password" required>
+<button type="submit" class="btn">Zaloguj się</button>
+</form>
+<p id="message"></p>
+</section>
+</main>
+
+<footer>
+<p>© 2025 Rzeczpospolita Polska RP Roleplay</p>
+</footer>
+
+<script src="script.js"></script>
+<script>
+// Renderowanie ogłoszeń
+renderOgloszenia();
+</script>
+</body>
+</html>

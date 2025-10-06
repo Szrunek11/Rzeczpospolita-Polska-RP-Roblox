@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Właściciela RP</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+<h1>Panel Właściciela RP</h1>
+</header>
+
+<main>
+<section id="adminLoginSection">
+<h2>Logowanie właściciela</h2>
+<form id="adminLoginForm">
+<label>Login:</label>
+<input type="text" id="adminLogin" required>
+<label>Hasło:</label>
+<input type="password" id="adminPassword" required>
+<button type="submit" class="btn">Zaloguj się</button>
+</form>
+<p id="loginMessage"></p>
+</section>
+
+<section id="adminPanel" class="hidden">
+<h2>Zatwierdzanie graczy</h2>
+<div id="usersList"></div>
+
+<h2>Dodaj ogłoszenie</h2>
+<form id="ogloszeniaForm">
+<textarea id="newOgloszenie" rows="3" placeholder="Treść ogłoszenia..." required></textarea>
+<button type="submit" class="btn">Dodaj ogłoszenie</button>
+</form>
+
+<h2>Lista ogłoszeń</h2>
+<ul id="adminOgloszenia"></ul>
+
+<h2>Rekrutacje graczy</h2>
+<div id="rekrutList"></div>
+</section>
+</main>
+
+<footer>
+<p>© 2025 Rzeczpospolita Polska RP Roleplay</p>
+</footer>
+
+<script src="script.js"></script>
+<script>
+// Logowanie admina
+document.getElementById("adminLoginForm").addEventListener("submit", loginAdmin);
+</script>
+</body>
+</html>
