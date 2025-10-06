@@ -40,9 +40,8 @@ nav a:hover{background:#fff;color:var(--primary-dark);transform:scale(1.05);}
   transition: transform 0.3s;
 }
 .card:hover{transform: translateY(-3px);}
-.section{display:none;}
-.section.active{display:block;animation:fadeIn 0.5s;}
-@keyframes fadeIn{from{opacity:0}to{opacity:1;}}
+.section{display:none;opacity:0;transition:opacity 0.5s;}
+.section.active{display:block;opacity:1;}
 .btn{
   background:var(--primary);color:#fff;border:none;padding:10px 14px;
   border-radius:6px;cursor:pointer;transition:0.3s;
@@ -59,9 +58,18 @@ ul.list{list-style:"👤 ";padding-left:18px}
 .admin-controls button{margin:2px;padding:4px 6px;border:none;border-radius:4px;background:#e63946;color:#fff;cursor:pointer}
 .admin-controls button:hover{background:#d62828}
 .error{color:#b71c1c;margin-top:6px;}
+#loader{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:24px;color:var(--primary);z-index:9999;
+  animation:fadeIn 0.5s;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body>
+
+<div id="loader">Ładowanie strony...</div>
 
 <header>
   <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Herb_Polski.svg" alt="Godło">
@@ -183,12 +191,17 @@ ul.list{list-style:"👤 ";padding-left:18px}
 </footer>
 
 <script>
+// --- Ładowanie strony ---
+window.addEventListener("load", () => {document.getElementById("loader").style.display="none";});
+
+// --- STORAGE ---
 let aktualnosci = JSON.parse(localStorage.getItem("aktualnosci")||"[]");
 let ogloszenia = JSON.parse(localStorage.getItem("ogloszenia")||"[]");
 let obywatele = JSON.parse(localStorage.getItem("obywatele")||"[]");
 let rekrutacje = JSON.parse(localStorage.getItem("rekrutacje")||"[]");
 let galeria = JSON.parse(localStorage.getItem("galeria")||"[]");
 
+// --- FUNKCJE ---
 function showSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -244,20 +257,20 @@ document.getElementById("rekrutacjaForm").addEventListener("submit",e=>{
 });
 
 // --- PANEL WŁAŚCICIELA ---
+const OWNER_PIN = "114";
 document.getElementById("pinBtn").addEventListener("click",()=>{
   const val=document.getElementById("ownerPin").value.trim();
-  if(val==="114"){
+  if(val===OWNER_PIN){
     document.getElementById("pinSection").classList.add("hidden");
     document.getElementById("ownerPanel").classList.remove("hidden");
     sessionStorage.setItem("ownerOpen","true");
     renderAdminLists();
-  } else{
+  } else {
     const err=document.getElementById("pinError");
     err.classList.remove("hidden");
     setTimeout(()=>err.classList.add("hidden"),2500);
   }
 });
-
 if(sessionStorage.getItem("ownerOpen")==="true"){
   document.getElementById("pinSection").classList.add("hidden");
   document.getElementById("ownerPanel").classList.remove("hidden");
@@ -265,53 +278,20 @@ if(sessionStorage.getItem("ownerOpen")==="true"){
 }
 
 // --- ADMIN FUNKCJE ---
-function adminAddNews(){
-  const t=document.getElementById("newsTitle").value.trim();
-  const x=document.getElementById("newsText").value.trim();
-  if(!t||!x)return alert("Uzupełnij tytuł i treść");
-  aktualnosci.unshift({title:t,text:x});
-  localStorage.setItem("aktualnosci",JSON.stringify(aktualnosci));
-  renderAdminLists();
-  document.getElementById("newsTitle").value="";
-  document.getElementById("newsText").value="";
-}
-function adminAddOgloszenie(){
-  const t=document.getElementById("announceText").value.trim();
-  if(!t)return alert("Wpisz treść");
-  ogloszenia.unshift(t);
-  localStorage.setItem("ogloszenia",JSON.stringify(ogloszenia));
-  renderAdminLists();
-  document.getElementById("announceText").value="";
-}
+function isDesktop(){return window.innerWidth>=1024;}
+function adminAddNews(){if(!isDesktop()){alert("Dodawanie aktualności tylko z komputera!"); return;} const t=document.getElementById("newsTitle").value.trim(); const x=document.getElementById("newsText").value.trim(); if(!t||!x)return alert("Uzupełnij tytuł i treść"); aktualnosci.unshift({title:t,text:x}); localStorage.setItem("aktualnosci",JSON.stringify(aktualnosci)); renderAdminLists(); document.getElementById("newsTitle").value=""; document.getElementById("newsText").value="";}
+function adminAddOgloszenie(){if(!isDesktop()){alert("Dodawanie ogłoszeń tylko z komputera!"); return;} const t=document.getElementById("announceText").value.trim(); if(!t)return alert("Wpisz treść"); ogloszenia.unshift(t); localStorage.setItem("ogloszenia",JSON.stringify(ogloszenia)); renderAdminLists(); document.getElementById("announceText").value="";}
 function adminDeleteOgloszenie(i){ogloszenia.splice(i,1);localStorage.setItem("ogloszenia",JSON.stringify(ogloszenia));renderAdminLists();}
 function adminEditUser(i){let u=obywatele[i];const r=prompt("Nowa rola:",u.role||"Obywatel");if(r!==null){u.role=r;localStorage.setItem("obywatele",JSON.stringify(obywatele));renderObywatele();renderAdminLists();}}
 function adminRemoveUser(i){if(confirm("Usunąć obywatela?")){obywatele.splice(i,1);localStorage.setItem("obywatele",JSON.stringify(obywatele));renderObywatele();renderAdminLists();}}
-function adminApproveRekrut(i){rekrutacje[i].approved=true;obywatele.push({nick:rekrutacje[i].nick,role:"Obywatel"});localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje));localStorage.setItem("obywatele",JSON.stringify(obywatele));renderObywatele();renderAdminLists();}
-function adminRemoveRekrut(i){rekrutacje.splice(i,1);localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje));renderAdminLists();}
-function adminAddPhoto(){
-  const input=document.getElementById("photoInput");
-  if(input.files && input.files[0]){
-    const reader=new FileReader();
-    reader.onload=function(e){
-      galeria.unshift(e.target.result);
-      localStorage.setItem("galeria",JSON.stringify(galeria));
-      renderGaleria();
-      renderAdminLists();
-      input.value="";
-    }
-    reader.readAsDataURL(input.files[0]);
-  }
-}
-function adminRemovePhoto(i){galeria.splice(i,1);localStorage.setItem("galeria",JSON.stringify(galeria));renderGaleria();renderAdminLists();}
-function ownerLogout(){sessionStorage.removeItem("ownerOpen");document.getElementById("ownerPanel").classList.add("hidden");document.getElementById("pinSection").classList.remove("hidden");}
+function adminApproveRekrut(i){rekrutacje[i].approved=true;obywatele.push({nick:rekrutacje[i].nick,role:"Obywatel"}); localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje)); localStorage.setItem("obywatele",JSON.stringify(obywatele)); renderObywatele(); renderAdminLists();}
+function adminRemoveRekrut(i){rekrutacje.splice(i,1);localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje)); renderAdminLists();}
+function adminAddPhoto(){if(!isDesktop()){alert("Dodawanie zdjęć tylko z komputera!"); return;} const input=document.getElementById("photoInput"); if(input.files && input.files[0]){ const reader=new FileReader(); reader.onload=function(e){ galeria.unshift(e.target.result); localStorage.setItem("galeria",JSON.stringify(galeria)); renderGaleria(); renderAdminLists(); input.value="";} reader.readAsDataURL(input.files[0]);}}
+function adminRemovePhoto(i){galeria.splice(i,1);localStorage.setItem("galeria",JSON.stringify(galeria)); renderGaleria(); renderAdminLists();}
+function ownerLogout(){sessionStorage.removeItem("ownerOpen");document.getElementById("ownerPanel").classList.add("hidden");document.getElementById("pinSection").classList.remove("hidden");document.getElementById("ownerPin").value="";}
 
 // --- INITIAL RENDER ---
-renderAktualnosci();
-renderOgloszenia();
-renderHome();
-renderObywatele();
-renderGaleria();
-renderAdminLists();
+renderAktualnosci(); renderOgloszenia(); renderHome(); renderObywatele(); renderGaleria(); renderAdminLists();
 </script>
 </body>
 </html>
