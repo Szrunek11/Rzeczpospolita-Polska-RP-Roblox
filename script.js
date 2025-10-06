@@ -1,155 +1,75 @@
 // Dane
-let obywatele = JSON.parse(localStorage.getItem("obywatele") || "[]");
+let aktualnosci = JSON.parse(localStorage.getItem("aktualnosci") || "[]");
 let ogloszenia = JSON.parse(localStorage.getItem("ogloszenia") || "[]");
-let rekrutacje = JSON.parse(localStorage.getItem("rekrutacje") || "[]");
+let obywatele = JSON.parse(localStorage.getItem("obywatele") || "[]");
+let galeria = JSON.parse(localStorage.getItem("galeria") || "[]");
 
-// --- GRACZE ---
-function renderOgloszenia(){
-  const ul=document.getElementById("ogloszenia-lista");
-  if(!ul) return;
-  ul.innerHTML="";
-  ogloszenia.forEach((text,i)=>{
-    const li=document.createElement("li");
-    li.innerHTML=`${text}`;
-    ul.appendChild(li);
-  });
+// Aktualności
+function renderNews(){
+  const list=document.getElementById("aktualnosciLista");
+  if(!list) return;
+  list.innerHTML = aktualnosci.map(n=>`<article><h3>${n.title}</h3><p>${n.text}</p></article>`).join("");
 }
+renderNews();
 
-// Rejestracja gracza
-const regForm=document.getElementById("registerForm");
-if(regForm){
-regForm.addEventListener("submit", function(e){
-  e.preventDefault();
-  const nick=document.getElementById("regNick").value.trim();
-  const password=document.getElementById("regPassword").value.trim();
-  if(obywatele.find(u=>u.nick===nick)){ alert("Ten nick już istnieje!"); return; }
-  obywatele.push({nick,password,approved:false,role:"Obywatel"});
-  localStorage.setItem("obywatele",JSON.stringify(obywatele));
-  alert("Konto zarejestrowane! Poczekaj na zatwierdzenie właściciela.");
-  regForm.reset();
-});
+// Obywatele
+function renderObywatele(){
+  const list=document.getElementById("obywateleLista");
+  if(!list) return;
+  list.innerHTML = obywatele.map(o=>`<li>${o}</li>`).join("");
 }
+renderObywatele();
 
-// Logowanie gracza
-const loginForm=document.getElementById("loginForm");
-if(loginForm){
-loginForm.addEventListener("submit", function(e){
-  e.preventDefault();
-  const nick=document.getElementById("nick").value.trim();
-  const password=document.getElementById("password").value.trim();
-  const message=document.getElementById("message");
-  const user = obywatele.find(u=>u.nick===nick && u.password===password);
-  if(!user){ message.textContent="❌ Nieprawidłowy nick lub hasło"; message.style.color="red"; return; }
-  if(!user.approved){ message.textContent="🕓 Konto oczekuje na zatwierdzenie"; message.style.color="orange"; return; }
-  message.textContent=`✅ Witaj, ${user.nick}! Rola: ${user.role}`;
-  message.style.color="green";
-});
-}
-
-// Formularz rekrutacyjny
-function submitRekrutacja(e){
-  e.preventDefault();
-  const nick=document.getElementById("rekrutNick").value.trim();
-  const text=document.getElementById("rekrutText").value.trim();
-  if(!nick || !text) return;
-  rekrutacje.push({nick,text,approved:false});
-  localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje));
-  const msg=document.getElementById("rekrutMessage");
-  if(msg){ msg.textContent="✅ Rekrutacja wysłana!"; msg.style.color="green"; }
-  document.getElementById("rekrutacjaForm").reset();
-}
-
-// --- ADMIN ---
-function loginAdmin(e){
-  e.preventDefault();
-  const login=document.getElementById("adminLogin").value.trim();
-  const pass=document.getElementById("adminPassword").value.trim();
-  const msg=document.getElementById("loginMessage");
-  if(login==="admin" && pass==="admin"){
-    msg.textContent="✅ Zalogowano!";
-    msg.style.color="green";
-    document.getElementById("adminLoginSection").classList.add("hidden");
-    document.getElementById("adminPanel").classList.remove("hidden");
-    initPanel();
-  } else {
-    msg.textContent="❌ Nieprawidłowy login lub hasło";
-    msg.style.color="red";
-  }
-}
-
-// Panel admin
-function initPanel(){
-  renderUsers();
-  renderAdminOgloszenia();
-  renderRekrutacje();
-}
-
-// Zarządzanie graczami
-function renderUsers(){
-  const div=document.getElementById("usersList");
-  div.innerHTML="";
-  obywatele.forEach((u,i)=>{
-    const d=document.createElement("div");
-    d.style.display="flex";d.style.justifyContent="space-between";d.style.marginBottom="5px";
-    d.innerHTML=`<span>${u.nick} — Status: ${u.approved ? "✅ Zatwierdzony":"🕓 Oczekuje"}</span>
-    <span>
-      ${!u.approved?`<button onclick="approveUser(${i})">Zatwierdź</button>`:""}
-      <button onclick="removeUser(${i})">Usuń</button>
-    </span>`;
-    div.appendChild(d);
-  });
-}
-function approveUser(i){ obywatele[i].approved=true; saveUsers(); renderUsers(); }
-function removeUser(i){ obywatele.splice(i,1); saveUsers(); renderUsers(); }
-function saveUsers(){ localStorage.setItem("obywatele",JSON.stringify(obywatele)); }
-
-// Ogłoszenia admin
-const ogForm=document.getElementById("ogloszeniaForm");
-if(ogForm){
-ogForm.addEventListener("submit", function(e){
-  e.preventDefault();
-  const text=document.getElementById("newOgloszenie").value.trim();
-  if(text==="") return;
-  ogloszenia.unshift(`[${new Date().toLocaleDateString()}] ${text}`);
-  localStorage.setItem("ogloszenia",JSON.stringify(ogloszenia));
-  document.getElementById("newOgloszenie").value="";
-  renderAdminOgloszenia();
-  renderOgloszenia();
-});
-}
-
-function renderAdminOgloszenia(){
-  const ul=document.getElementById("adminOgloszenia");
-  if(!ul) return;
-  ul.innerHTML="";
-  ogloszenia.forEach((o,i)=>{
-    const li=document.createElement("li");
-    li.innerHTML=`<span>${o}</span> <button onclick="removeOgloszenie(${i})">Usuń</button>`;
-    ul.appendChild(li);
-  });
-}
-function removeOgloszenie(i){
-  ogloszenia.splice(i,1);
-  localStorage.setItem("ogloszenia",JSON.stringify(ogloszenia));
-  renderAdminOgloszenia();
-  renderOgloszenia();
-}
-
-// Rekrutacje admin
-function renderRekrutacje(){
-  const div=document.getElementById("rekrutList");
+// Galeria
+function renderGaleria(){
+  const div=document.getElementById("galeriaZdjecia");
   if(!div) return;
-  div.innerHTML="";
-  rekrutacje.forEach((r,i)=>{
-    const rdiv=document.createElement("div");
-    rdiv.style.display="flex";rdiv.style.justifyContent="space-between";rdiv.style.marginBottom="5px";
-    rdiv.innerHTML=`<span>${r.nick}: ${r.text} - Status: ${r.approved ? "✅ Zatwierdzone":"🕓 Oczekuje"}</span>
-    <span>
-      ${!r.approved?`<button onclick="approveRekrut(${i})">Zatwierdź</button>`:""}
-      <button onclick="removeRekrut(${i})">Usuń</button>
-    </span>`;
-    div.appendChild(rdiv);
+  div.innerHTML = galeria.map(src=>`<img src="${src}">`).join("");
+}
+renderGaleria();
+
+// Rekrutacja
+const form=document.getElementById("rekrutacjaForm");
+if(form){
+  form.addEventListener("submit",e=>{
+    e.preventDefault();
+    const nick=document.getElementById("rekrutNick").value;
+    const text=document.getElementById("rekrutText").value;
+    if(nick && text){
+      obywatele.push(nick);
+      localStorage.setItem("obywatele",JSON.stringify(obywatele));
+      document.getElementById("rekrutMessage").innerHTML=`✅ Rekrutacja wysłana! Dołącz na Discord: <a href="https://discord.gg/5aZqgpErnc" target="_blank">Kliknij tutaj</a>`;
+      form.reset();
+    }
   });
 }
-function approveRekrut(i){ rekrutacje[i].approved=true; localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje)); renderRekrutacje(); }
-function removeRekrut(i){ rekrutacje.splice(i,1); localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje)); renderRekrutacje(); }
+
+// Panel admina
+function adminLogin(){
+  const u=document.getElementById("adminUser").value;
+  const p=document.getElementById("adminPass").value;
+  if(u==="admin" && p==="admin"){
+    document.getElementById("adminLogin").style.display="none";
+    document.getElementById("adminPanel").style.display="block";
+  }else alert("Niepoprawne dane logowania!");
+}
+function addNews(){
+  const t=document.getElementById("newsTitle").value;
+  const x=document.getElementById("newsText").value;
+  if(!t||!x)return;
+  aktualnosci.push({title:t,text:x});
+  localStorage.setItem("aktualnosci",JSON.stringify(aktualnosci));
+  alert("Aktualność dodana!");
+}
+function addPhoto(){
+  const input=document.getElementById("photoInput");
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    galeria.push(e.target.result);
+    localStorage.setItem("galeria",JSON.stringify(galeria));
+    alert("Zdjęcie dodane!");
+  }
+  reader.readAsDataURL(file);
+}
