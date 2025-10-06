@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rzeczpospolita Polska RP</title>
 <style>
-/* --- KOLORY I CZCIONKI --- */
 :root{
   --primary:#e63946;
   --primary-dark:#d62828;
@@ -28,16 +27,12 @@ header{
 header img{width:60px;height:auto}
 header h1{margin:0;font-size:24px}
 header p{margin:0;font-size:14px;color:#f1faee}
-
-/* --- MENU --- */
 nav{display:flex;justify-content:center;flex-wrap:wrap;background:var(--primary-dark);}
 nav a{
   color:#fff;text-decoration:none;padding:10px 14px;margin:4px;
   border-radius:6px;transition:0.3s;
 }
 nav a:hover{background:#fff;color:var(--primary-dark);transform:scale(1.05);}
-
-/* --- SEKCJE --- */
 .container{max-width:1000px;margin:20px auto;padding:0 16px;}
 .card{
   background:#fff;border-radius:12px;padding:20px;margin-bottom:18px;
@@ -48,28 +43,16 @@ nav a:hover{background:#fff;color:var(--primary-dark);transform:scale(1.05);}
 .section{display:none;}
 .section.active{display:block;animation:fadeIn 0.5s;}
 @keyframes fadeIn{from{opacity:0}to{opacity:1;}}
-
-/* --- PRZYCISKI --- */
 .btn{
   background:var(--primary);color:#fff;border:none;padding:10px 14px;
   border-radius:6px;cursor:pointer;transition:0.3s;
 }
 .btn:hover{background:var(--primary-dark);transform:scale(1.05);}
-
-/* --- INPUT --- */
 input,textarea{width:100%;max-width:720px;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ccc;transition:0.3s;}
 input:focus,textarea:focus{outline:none;border-color:var(--primary)}
-
-/* --- LISTY --- */
 ul.list{list-style:"👤 ";padding-left:18px}
-
-/* --- GALERIA --- */
 .galeria img{width:180px;margin:6px;border-radius:8px;border:2px solid var(--primary)}
-
-/* --- STOPKA --- */
 .site-footer{background:#222;color:#fff;padding:14px;text-align:center}
-
-/* --- ADMIN --- */
 .admin-block{margin-bottom:16px;padding:10px;border-left:4px solid var(--primary)}
 .admin-item{margin-bottom:6px;padding:6px;border-bottom:1px solid #ccc}
 .admin-item img{max-width:120px;margin:4px 0; display:block;}
@@ -100,31 +83,32 @@ ul.list{list-style:"👤 ";padding-left:18px}
 
 <main class="container">
 
-<!-- STRONA GŁÓWNA -->
 <section id="home" class="card section active">
   <h2>Witamy w Rzeczpospolitej Polskiej RP</h2>
   <p>Oficjalna strona projektu — czytaj aktualności, zobacz galerię i zgłoś się do rekrutacji.</p>
+  
+  <h3>Ogłoszenia</h3>
+  <div id="homeOgloszenia"></div>
+  
+  <h3>Aktualności</h3>
+  <div id="homeAktualnosci"></div>
 </section>
 
-<!-- AKTUALNOŚCI -->
 <section id="aktualnosci" class="card section">
   <h2>Aktualności</h2>
   <div id="aktualnosciLista"></div>
 </section>
 
-<!-- OBYWATELE -->
 <section id="obywatele" class="card section">
   <h2>Lista Obywateli</h2>
   <ul id="obywateleLista" class="list"></ul>
 </section>
 
-<!-- GALERIA -->
 <section id="galeria" class="card section">
   <h2>Galeria</h2>
   <div id="galeriaZdjecia" class="galeria"></div>
 </section>
 
-<!-- REKRUTACJA -->
 <section id="rekrutacja" class="card section">
   <h2>Rekrutacja</h2>
   <form id="rekrutacjaForm">
@@ -137,14 +121,12 @@ ul.list{list-style:"👤 ";padding-left:18px}
   <p id="rekrutMessage"></p>
 </section>
 
-<!-- KONTAKT -->
 <section id="kontakt" class="card section">
   <h2>Kontakt</h2>
   <p>Właściciel: <strong>Arnol_Game</strong></p>
   <p>Oficjalny Discord RP: <a href="https://discord.gg/5aZqgpErnc" target="_blank">Kliknij tutaj</a></p>
 </section>
 
-<!-- PANEL WŁAŚCICIELA -->
 <section id="admin" class="card section">
   <div id="pinSection">
     <h2>Wejdź PIN właściciela</h2>
@@ -196,61 +178,60 @@ ul.list{list-style:"👤 ";padding-left:18px}
 </section>
 
 </main>
-
 <footer class="site-footer">
   <p>© 2025 Rzeczpospolita Polska RP</p>
 </footer>
 
 <script>
-// --- DANE W LOCALSTORAGE ---
 let aktualnosci = JSON.parse(localStorage.getItem("aktualnosci")||"[]");
 let ogloszenia = JSON.parse(localStorage.getItem("ogloszenia")||"[]");
 let obywatele = JSON.parse(localStorage.getItem("obywatele")||"[]");
 let rekrutacje = JSON.parse(localStorage.getItem("rekrutacje")||"[]");
 let galeria = JSON.parse(localStorage.getItem("galeria")||"[]");
 
-// --- FUNKCJE POKAZYWANIA SEKCJI ---
 function showSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
 }
 
-// --- RENDER FUNCTIONS ---
+function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+
 function renderAktualnosci(){
   const el=document.getElementById("aktualnosciLista");
-  if(!el)return;
-  if(aktualnosci.length===0){el.innerHTML="<p>Brak aktualności.</p>";return;}
-  el.innerHTML=aktualnosci.map(n=>`<article class="news"><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml(n.text)}</p></article>`).join("");
+  el.innerHTML = aktualnosci.length===0 ? "<p>Brak aktualności.</p>" : aktualnosci.map(n=>`<article class="news"><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml(n.text)}</p></article>`).join("");
 }
 function renderOgloszenia(){
   const el=document.getElementById("adminOgloszeniaList");
-  if(el) el.innerHTML=ogloszenia.map((o,i)=>`<div class="admin-item">${escapeHtml(o)}<div class="admin-controls"><button onclick="adminDeleteOgloszenie(${i})">Usuń</button></div></div>`).join("")||"<p>Brak ogłoszeń.</p>";
+  el.innerHTML = ogloszenia.length===0 ? "<p>Brak ogłoszeń.</p>" : ogloszenia.map((o,i)=>`<div class="admin-item">${escapeHtml(o)}<div class="admin-controls"><button onclick="adminDeleteOgloszenie(${i})">Usuń</button></div></div>`).join("");
 }
 function renderObywatele(){
   const el=document.getElementById("obywateleLista");
-  if(!el)return;
-  if(obywatele.length===0){el.innerHTML="<p>Brak obywateli.</p>";return;}
-  el.innerHTML=obywatele.map(u=>`<li>${escapeHtml(u.nick)} <span class="muted">(${escapeHtml(u.role||'Obywatel')})</span></li>`).join("");
+  el.innerHTML = obywatele.length===0 ? "<p>Brak obywateli.</p>" : obywatele.map(u=>`<li>${escapeHtml(u.nick)} <span class="muted">(${escapeHtml(u.role||'Obywatel')})</span></li>`).join("");
 }
 function renderGaleria(){
   const el=document.getElementById("galeriaZdjecia");
-  if(!el)return;
-  if(galeria.length===0){el.innerHTML="<p>Brak zdjęć.</p>";return;}
-  el.innerHTML=galeria.map(src=>`<img src="${src}" alt="Zdjęcie">`).join("");
+  el.innerHTML = galeria.length===0 ? "<p>Brak zdjęć.</p>" : galeria.map(src=>`<img src="${src}" alt="Zdjęcie">`).join("");
+}
+function renderHome(){
+  const homeO=document.getElementById("homeOgloszenia");
+  homeO.innerHTML = ogloszenia.length===0 ? "<p>Brak ogłoszeń.</p>" : ogloszenia.map(o=>`<div class="card">${escapeHtml(o)}</div>`).join("");
+  const homeA=document.getElementById("homeAktualnosci");
+  homeA.innerHTML = aktualnosci.length===0 ? "<p>Brak aktualności.</p>" : aktualnosci.map(n=>`<div class="card"><strong>${escapeHtml(n.title)}</strong><p>${escapeHtml(n.text)}</p></div>`).join("");
 }
 function renderAdminLists(){
   renderAktualnosci();
   renderOgloszenia();
+  renderHome();
   const usersDiv=document.getElementById("adminUsersList");
-  if(usersDiv) usersDiv.innerHTML=obywatele.map((u,i)=>`<div class="admin-item">${escapeHtml(u.nick)} — ${u.approved?'<span style="green">zatw.</span>':'<span style="orange">oczek.</span>'} — ${escapeHtml(u.role||'Obywatel')}<div class="admin-controls"><button onclick="adminEditUser(${i})">Edytuj</button><button onclick="adminRemoveUser(${i})">Usuń</button></div></div>`).join("")||"<p>Brak użytkowników.</p>";
+  usersDiv.innerHTML=obywatele.map((u,i)=>`<div class="admin-item">${escapeHtml(u.nick)} — ${escapeHtml(u.role||'Obywatel')}<div class="admin-controls"><button onclick="adminEditUser(${i})">Edytuj</button><button onclick="adminRemoveUser(${i})">Usuń</button></div></div>`).join("")||"<p>Brak użytkowników.</p>";
   const rekrutDiv=document.getElementById("adminRekrutList");
-  if(rekrutDiv) rekrutDiv.innerHTML=rekrutacje.map((r,i)=>`<div class="admin-item">${escapeHtml(r.nick)} — ${escapeHtml(r.text)} — ${r.approved?'<span style="color:green">zatw.</span>':'<span style="color:orange">oczek.</span>'}<div class="admin-controls">${!r.approved?`<button onclick="adminApproveRekrut(${i})">Zatwierdź</button>`:""}<button onclick="adminRemoveRekrut(${i})">Usuń</button></div></div>`).join("")||"<p>Brak rekrutacji.</p>";
+  rekrutDiv.innerHTML=rekrutacje.map((r,i)=>`<div class="admin-item">${escapeHtml(r.nick)} — ${escapeHtml(r.text)} — ${r.approved?'<span style="color:green">zatw.</span>':'<span style="color:orange">oczek.</span>'}<div class="admin-controls">${!r.approved?`<button onclick="adminApproveRekrut(${i})">Zatwierdź</button>`:""}<button onclick="adminRemoveRekrut(${i})">Usuń</button></div></div>`).join("")||"<p>Brak rekrutacji.</p>";
   const galEdit=document.getElementById("adminGaleria");
-  if(galEdit) galEdit.innerHTML=galeria.map((g,i)=>`<div class="admin-item"><img src="${g}"><div class="admin-controls"><button onclick="adminRemovePhoto(${i})">Usuń</button></div></div>`).join("")||"<p>Brak zdjęć.</p>";
+  galEdit.innerHTML=galeria.map((g,i)=>`<div class="admin-item"><img src="${g}"><div class="admin-controls"><button onclick="adminRemovePhoto(${i})">Usuń</button></div></div>`).join("")||"<p>Brak zdjęć.</p>";
 }
 
 // --- REKRUTACJA ---
-document.getElementById("rekrutacjaForm")?.addEventListener("submit",e=>{
+document.getElementById("rekrutacjaForm").addEventListener("submit",e=>{
   e.preventDefault();
   const nick=document.getElementById("rekrutNick").value.trim();
   const text=document.getElementById("rekrutText").value.trim();
@@ -263,7 +244,7 @@ document.getElementById("rekrutacjaForm")?.addEventListener("submit",e=>{
 });
 
 // --- PANEL WŁAŚCICIELA ---
-document.getElementById("pinBtn")?.addEventListener("click",()=>{
+document.getElementById("pinBtn").addEventListener("click",()=>{
   const val=document.getElementById("ownerPin").value.trim();
   if(val==="114"){
     document.getElementById("pinSection").classList.add("hidden");
@@ -278,8 +259,8 @@ document.getElementById("pinBtn")?.addEventListener("click",()=>{
 });
 
 if(sessionStorage.getItem("ownerOpen")==="true"){
-  document.getElementById("pinSection")?.classList.add("hidden");
-  document.getElementById("ownerPanel")?.classList.remove("hidden");
+  document.getElementById("pinSection").classList.add("hidden");
+  document.getElementById("ownerPanel").classList.remove("hidden");
   renderAdminLists();
 }
 
@@ -324,11 +305,13 @@ function adminAddPhoto(){
 function adminRemovePhoto(i){galeria.splice(i,1);localStorage.setItem("galeria",JSON.stringify(galeria));renderGaleria();renderAdminLists();}
 function ownerLogout(){sessionStorage.removeItem("ownerOpen");document.getElementById("ownerPanel").classList.add("hidden");document.getElementById("pinSection").classList.remove("hidden");}
 
-// --- ESCAPE ---
-function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
-
-// --- RENDER INITIAL ---
-renderAktualnosci();renderObywatele();renderGaleria();renderAdminLists();
+// --- INITIAL RENDER ---
+renderAktualnosci();
+renderOgloszenia();
+renderHome();
+renderObywatele();
+renderGaleria();
+renderAdminLists();
 </script>
 </body>
 </html>
