@@ -2,41 +2,338 @@
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rzeczpospolita Polska RP</title>
-<link rel="stylesheet" href="style.css">
-<script defer src="script.js"></script>
+<style>
+:root{
+  --red:#d62828;
+  --red-dark:#b71c1c;
+  --bg:#f7f7f7;
+  --muted:#666;
+}
+*{box-sizing:border-box}
+body{
+  font-family: Inter, Roboto, Arial, sans-serif;
+  margin:0;
+  background: linear-gradient(180deg,#ffffff 75%, var(--red) 100%);
+  color:#111;
+}
+header{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  background:#fff;
+  border-bottom:4px solid var(--red);
+}
+header.small-header{padding:10px}
+header img.godlo{width:56px;height:auto}
+header .header-text h1{margin:0;font-size:20px}
+header .header-text .small{margin:0;color:var(--muted);font-size:13px}
+
+nav.main-nav{
+  display:flex;
+  gap:6px;
+  justify-content:center;
+  background:var(--red);
+  padding:8px 6px;
+  flex-wrap:wrap;
+}
+nav.main-nav a{
+  color:#fff;
+  padding:10px 14px;
+  text-decoration:none;
+  font-weight:600;
+  border-radius:3px;
+}
+nav.main-nav a:hover{background:var(--red-dark)}
+
+.container{max-width:1000px;margin:20px auto;padding:0 12px}
+.card{
+  background:#fff;border-radius:8px;padding:18px;margin-bottom:14px;box-shadow:0 6px 18px rgba(0,0,0,0.06);
+}
+.btn{background:var(--red);color:#fff;border:none;padding:10px 12px;border-radius:6px;cursor:pointer}
+.btn:hover{background:var(--red-dark)}
+input,textarea{width:100%;max-width:720px;padding:10px;margin:8px 0;border-radius:6px;border:1px solid #ddd}
+ul.list{list-style:"👤 ";padding-left:18px}
+.galeria img{width:180px;margin:6px;border-radius:6px;border:2px solid var(--red)}
+.site-footer{background:#222;color:#fff;padding:12px;text-align:center}
+.hidden{display:none}
+.error{color:#b71c1c}
+.admin-block{margin-bottom:16px;padding:10px;border-left:4px solid var(--red)}
+.admin-item{margin-bottom:6px;padding:6px;border-bottom:1px solid #ccc}
+.admin-item img{max-width:120px;margin:4px 0; display:block;}
+.admin-controls button{margin:2px;padding:4px 6px;border:none;border-radius:4px;background:#d62828;color:#fff;cursor:pointer}
+.admin-controls button:hover{background:#b71c1c}
+</style>
 </head>
 <body>
 <header>
   <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Herb_Polski.svg" alt="Godło" class="godlo">
-  <h1>Rzeczpospolita Polska RP</h1>
+  <div class="header-text">
+    <h1>Rzeczpospolita Polska RP</h1>
+    <p class="small">Projekt Roleplay — społeczność Roblox</p>
+  </div>
 </header>
-
-<nav>
-  <a href="index.html">Strona główna</a>
-  <a href="aktualnosci.html">Aktualności</a>
-  <a href="obywatele.html">Obywatele</a>
-  <a href="galeria.html">Galeria</a>
-  <a href="rekrutacja.html">Rekrutacja</a>
-  <a href="kontakt.html">Kontakt</a>
-  <a href="admin.html">Panel</a>
+<nav class="main-nav">
+  <a href="#home" onclick="showSection('home')">Strona główna</a>
+  <a href="#aktualnosci" onclick="showSection('aktualnosci')">Aktualności</a>
+  <a href="#obywatele" onclick="showSection('obywatele')">Obywatele</a>
+  <a href="#galeria" onclick="showSection('galeria')">Galeria</a>
+  <a href="#rekrutacja" onclick="showSection('rekrutacja')">Rekrutacja</a>
+  <a href="#kontakt" onclick="showSection('kontakt')">Kontakt</a>
+  <a href="#admin" onclick="showSection('admin')">Panel właściciela</a>
 </nav>
 
-<main>
-  <section id="aktualnosci">
-    <h2>Aktualności RP</h2>
+<main class="container">
+  <section id="home" class="card section">
+    <h2>Witamy w Rzeczpospolitej Polskiej RP</h2>
+    <p>Oficjalna strona projektu — czytaj aktualności, zobacz galerię i zgłoś się do rekrutacji.</p>
+  </section>
+
+  <section id="aktualnosci" class="card section hidden">
+    <h2>Aktualności</h2>
     <div id="aktualnosciLista"></div>
   </section>
 
-  <section id="ogloszenia">
-    <h2>Ogłoszenia Publiczne</h2>
-    <div id="ogloszeniaLista"></div>
+  <section id="obywatele" class="card section hidden">
+    <h2>Lista Obywateli</h2>
+    <ul id="obywateleLista" class="list"></ul>
   </section>
-</main>
 
-<footer>
-  <p>© 2025 Rzeczpospolita Polska RP | Projekt Roleplay by Arnol_Game</p>
+  <section id="galeria" class="card section hidden">
+    <h2>Galeria</h2>
+    <div id="galeriaZdjecia" class="galeria"></div>
+  </section>
+
+  <section id="rekrutacja" class="card section hidden">
+    <h2>Rekrutacja</h2>
+    <form id="rekrutacjaForm">
+      <label>Nick w grze</label>
+      <input id="rekrutNick" required>
+      <label>Dlaczego chcesz dołączyć?</label>
+      <textarea id="rekrutText" rows="4" required></textarea>
+      <button type="submit" class="btn">Wyślij rekrutację</button>
+    </form>
+    <p id="rekrutMessage"></p>
+  </section>
+
+  <section id="kontakt" class="card section hidden">
+    <h2>Kontakt</h2>
+    <p>Właściciel: <strong>Arnol_Game</strong></p>
+    <p>Oficjalny Discord RP: <a href="https://discord.gg/5aZqgpErnc" target="_blank">Kliknij tutaj</a></p>
+  </section>
+
+  <section id="admin" class="card section hidden">
+    <div id="pinSection">
+      <h2>Wejdź PIN właściciela</h2>
+      <input id="ownerPin" type="password" placeholder="Wpisz PIN">
+      <button id="pinBtn" class="btn">Otwórz panel</button>
+      <p id="pinError" class="error hidden">Niepoprawny PIN</p>
+    </div>
+
+    <div id="ownerPanel" class="hidden">
+      <h2>Panel właściciela — zaawansowany</h2>
+      <div class="admin-block">
+        <h3>Aktualności</h3>
+        <input id="newsTitle" placeholder="Tytuł">
+        <textarea id="newsText" placeholder="Treść"></textarea>
+        <button onclick="adminAddNews()" class="btn">Dodaj aktualność</button>
+        <h4>Lista aktualności</h4>
+        <div id="adminNewsList"></div>
+      </div>
+
+      <div class="admin-block">
+        <h3>Ogłoszenia</h3>
+        <input id="announceText" placeholder="Treść ogłoszenia">
+        <button onclick="adminAddOgloszenie()" class="btn">Dodaj ogłoszenie</button>
+        <h4>Lista ogłoszeń</h4>
+        <div id="adminOgloszeniaList"></div>
+      </div>
+
+      <div class="admin-block">
+        <h3>Obywatele</h3>
+        <div id="adminUsersList"></div>
+      </div>
+
+      <div class="admin-block">
+        <h3>Rekrutacje</h3>
+        <div id="adminRekrutList"></div>
+      </div>
+
+      <div class="admin-block">
+        <h3>Galeria</h3>
+        <input type="file" id="photoInput" accept="image/*">
+        <button onclick="adminAddPhoto()" class="btn">Dodaj zdjęcie</button>
+        <h4>Zdjęcia</h4>
+        <div id="adminGaleria"></div>
+      </div>
+
+      <button onclick="ownerLogout()" class="btn" style="background:#b71c1c;margin-top:12px;">Wyloguj</button>
+    </div>
+  </section>
+
+</main>
+<footer class="site-footer">
+  <p>© 2025 Rzeczpospolita Polska RP</p>
 </footer>
+
+<script>
+let aktualnosci = JSON.parse(localStorage.getItem("aktualnosci")||"[]");
+let ogloszenia = JSON.parse(localStorage.getItem("ogloszenia")||"[]");
+let obywatele = JSON.parse(localStorage.getItem("obywatele")||"[]");
+let rekrutacje = JSON.parse(localStorage.getItem("rekrutacje")||"[]");
+let galeria = JSON.parse(localStorage.getItem("galeria")||"[]");
+
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.add('hidden'));
+  document.getElementById(id).classList.remove('hidden');
+}
+
+// --- DOMContentLoaded ---
+document.addEventListener("DOMContentLoaded", ()=>{
+  renderAktualnosci();
+  renderOgloszenia();
+  renderObywatele();
+  renderGaleria();
+  renderAdminLists();
+
+  const rekrutForm = document.getElementById("rekrutacjaForm");
+  if(rekrutForm){
+    rekrutForm.addEventListener("submit", e=>{
+      e.preventDefault();
+      const nick = document.getElementById("rekrutNick").value.trim();
+      const text = document.getElementById("rekrutText").value.trim();
+      if(!nick||!text) return;
+      rekrutacje.unshift({nick,text,approved:false,date:new Date().toISOString()});
+      localStorage.setItem("rekrutacje", JSON.stringify(rekrutacje));
+      document.getElementById("rekrutMessage").innerHTML = '✅ Rekrutacja wysłana! Dołącz na nasz Discord: <a href="https://discord.gg/5aZqgpErnc" target="_blank">Kliknij tutaj</a>';
+      rekrutForm.reset();
+      renderAdminLists();
+    });
+  }
+
+  const pinBtn = document.getElementById("pinBtn");
+  if(pinBtn){
+    pinBtn.addEventListener("click", ()=>{
+      const val = document.getElementById("ownerPin").value.trim();
+      const PIN = "114";
+      const pinError = document.getElementById("pinError");
+      if(val===PIN){
+        document.getElementById("pinSection").classList.add("hidden");
+        document.getElementById("ownerPanel").classList.remove("hidden");
+        sessionStorage.setItem("ownerOpen","true");
+        renderAdminLists();
+      }else{
+        pinError.classList.remove("hidden");
+        setTimeout(()=>pinError.classList.add("hidden"),3000);
+      }
+    });
+  }
+  if(sessionStorage.getItem("ownerOpen")==="true"){
+    document.getElementById("pinSection")?.classList.add("hidden");
+    document.getElementById("ownerPanel")?.classList.remove("hidden");
+    renderAdminLists();
+  }
+});
+
+// ---------- RENDER FUNCTIONS ----------
+function renderAktualnosci(){
+  const el=document.getElementById("aktualnosciLista");
+  if(!el)return;
+  if(aktualnosci.length===0){el.innerHTML="<p>Brak aktualności.</p>";return;}
+  el.innerHTML=aktualnosci.map(n=>`<article class="news"><h3>${escapeHtml(n.title)}</h3><p>${escapeHtml(n.text)}</p></article>`).join("");
+}
+
+function renderOgloszenia(){
+  const el=document.getElementById("ogloszeniaLista");
+  if(!el)return;
+  if(ogloszenia.length===0){el.innerHTML="<p>Brak ogłoszeń.</p>";return;}
+  el.innerHTML=ogloszenia.map(o=>`<div class="announce">${escapeHtml(o)}</div>`).join("");
+}
+
+function renderObywatele(){
+  const el=document.getElementById("obywateleLista");
+  if(!el)return;
+  if(obywatele.length===0){el.innerHTML="<p>Brak obywateli.</p>";return;}
+  el.innerHTML=obywatele.map(u=>`<li>${escapeHtml(u.nick)} <span class="muted">(${escapeHtml(u.role||'Obywatel')})</span></li>`).join("");
+}
+
+function renderGaleria(){
+  const el=document.getElementById("galeriaZdjecia");
+  if(!el)return;
+  if(galeria.length===0){el.innerHTML="<p>Brak zdjęć w galerii.</p>";return;}
+  el.innerHTML=galeria.map(src=>`<img src="${src}" alt="Zdjęcie">`).join("");
+}
+
+// ---------- ADMIN ----------
+function renderAdminLists(){
+  const adminNews=document.getElementById("adminNewsList");
+  if(adminNews) adminNews.innerHTML=aktualnosci.map((n,i)=>`<div class="admin-item"><strong>${escapeHtml(n.title)}</strong><div>${escapeHtml(n.text)}</div><div class="admin-controls"><button onclick="adminDeleteNews(${i})">Usuń</button></div></div>`).join("")||"<p>Brak aktualności.</p>";
+  const adminO=document.getElementById("adminOgloszeniaList");
+  if(adminO) adminO.innerHTML=ogloszenia.map((o,i)=>`<div class="admin-item">${escapeHtml(o)}<div class="admin-controls"><button onclick="adminDeleteOgloszenie(${i})">Usuń</button></div></div>`).join("")||"<p>Brak ogłoszeń.</p>";
+  const usersDiv=document.getElementById("adminUsersList");
+  if(usersDiv) usersDiv.innerHTML=obywatele.map((u,i)=>`<div class="admin-item">${escapeHtml(u.nick)} — ${u.approved?'<span style="color:green">zatw.</span>':'<span style="color:orange">oczek.</span>'} — ${escapeHtml(u.role||'Obywatel')}<div class="admin-controls"><button onclick="adminEditUser(${i})">Edytuj</button><button onclick="adminRemoveUser(${i})">Usuń</button></div></div>`).join("")||"<p>Brak użytkowników.</p>";
+  const rekrutDiv=document.getElementById("adminRekrutList");
+  if(rekrutDiv) rekrutDiv.innerHTML=rekrutacje.map((r,i)=>`<div class="admin-item">${escapeHtml(r.nick)} — ${escapeHtml(r.text)} — ${r.approved?'<span style="color:green">zatw.</span>':'<span style="color:orange">oczek.</span>'}<div class="admin-controls">${!r.approved?`<button onclick="adminApproveRekrut(${i})">Zatwierdź</button>`:""}<button onclick="adminRemoveRekrut(${i})">Usuń</button></div></div>`).join("")||"<p>Brak rekrutacji.</p>";
+  const galEdit=document.getElementById("adminGaleria");
+  if(galEdit) galEdit.innerHTML=galeria.map((g,i)=>`<div class="admin-item"><img src="${g}"><div class="admin-controls"><button onclick="adminRemovePhoto(${i})">Usuń</button></div></div>`).join("")||"<p>Brak zdjęć.</p>";
+}
+
+// NEWS
+function adminAddNews(){
+  const t=document.getElementById("newsTitle").value.trim();
+  const x=document.getElementById("newsText").value.trim();
+  if(!t||!x)return alert("Uzupełnij tytuł i treść");
+  aktualnosci.unshift({title:t,text:x});
+  localStorage.setItem("aktualnosci",JSON.stringify(aktualnosci));
+  renderAktualnosci();
+  renderAdminLists();
+  document.getElementById("newsTitle").value="";
+  document.getElementById("newsText").value="";
+}
+
+// OGŁOSZENIA
+function adminAddOgloszenie(){
+  const t=document.getElementById("announceText").value.trim();
+  if(!t)return alert("Wpisz treść");
+  ogloszenia.unshift(t);
+  localStorage.setItem("ogloszenia",JSON.stringify(ogloszenia));
+  renderOgloszenia();
+  renderAdminLists();
+  document.getElementById("announceText").value="";
+}
+
+// OBYWATELE
+function adminEditUser(i){let u=obywatele[i];const newRole=prompt("Nowa rola:",u.role||"Obywatel");if(newRole!==null){u.role=newRole;localStorage.setItem("obywatele",JSON.stringify(obywatele));renderObywatele();renderAdminLists();}}
+function adminRemoveUser(i){if(confirm("Usunąć obywatela?")){obywatele.splice(i,1);localStorage.setItem("obywatele",JSON.stringify(obywatele));renderObywatele();renderAdminLists();}}
+
+// REKRUTACJE
+function adminApproveRekrut(i){rekrutacje[i].approved=true;obywatele.push({nick:rekrutacje[i].nick,role:"Obywatel"});localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje));localStorage.setItem("obywatele",JSON.stringify(obywatele));renderObywatele();renderAdminLists();}
+function adminRemoveRekrut(i){rekrutacje.splice(i,1);localStorage.setItem("rekrutacje",JSON.stringify(rekrutacje));renderAdminLists();}
+
+// GALERIA
+function adminAddPhoto(){
+  const input=document.getElementById("photoInput");
+  if(input.files && input.files[0]){
+    const reader=new FileReader();
+    reader.onload=function(e){
+      galeria.unshift(e.target.result);
+      localStorage.setItem("galeria",JSON.stringify(galeria));
+      renderGaleria();
+      renderAdminLists();
+      input.value="";
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+function adminRemovePhoto(i){galeria.splice(i,1);localStorage.setItem("galeria",JSON.stringify(galeria));renderGaleria();renderAdminLists();}
+
+function ownerLogout(){sessionStorage.removeItem("ownerOpen");document.getElementById("ownerPanel").classList.add("hidden");document.getElementById("pinSection").classList.remove("hidden");}
+
+// ESCAPE
+function escapeHtml(text){return text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");}
+</script>
+
 </body>
 </html>
