@@ -11,9 +11,11 @@
 <header><h1>Panel Właściciela RP</h1></header>
 <main>
   <div id="adminLogin">
-    <input id="adminUser" placeholder="Login">
-    <input id="adminPass" type="password" placeholder="Hasło">
-    <button onclick="adminLogin()">Zaloguj</button>
+    <h2>Zaloguj się jako właściciel</h2>
+    <input id="adminUser" placeholder="Login" autocomplete="off">
+    <input id="adminPass" type="password" placeholder="Hasło" autocomplete="off">
+    <button id="loginBtn">Zaloguj</button>
+    <p id="loginError" style="color:red;display:none;">Błędny login lub hasło!</p>
   </div>
 
   <div id="adminPanel" style="display:none;">
@@ -21,10 +23,13 @@
     <input id="newsTitle" placeholder="Tytuł">
     <textarea id="newsText" placeholder="Treść"></textarea>
     <button onclick="addNews()">Dodaj</button>
-    
+
     <h2>Dodaj zdjęcie do galerii</h2>
     <input type="file" id="photoInput" accept="image/*">
     <button onclick="addPhoto()">Dodaj zdjęcie</button>
+
+    <hr>
+    <button onclick="adminLogout()">Wyloguj</button>
   </div>
 </main>
 <footer><p>© 2025 RP</p></footer>
