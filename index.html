@@ -1,146 +1,85 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rzeczpospolita Polska RP</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rzeczpospolita Polska RP</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Herb_Polski.svg" alt="Godło Polski">
+    <div>
+      <h1>Rzeczpospolita Polska RP</h1>
+      <p>Oficjalna strona projektu RP w Roblox</p>
+    </div>
+  </header>
 
-<header>
-  <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Herb_Polski.svg" alt="Herb RP">
-  <div>
-    <h1>Rzeczpospolita Polska RP</h1>
-    <p>Projekt Roleplay Roblox</p>
-  </div>
-</header>
+  <nav>
+    <a href="#" onclick="showSection('home')">Strona główna</a>
+    <a href="#" onclick="showSection('aktualnosci')">Aktualności</a>
+    <a href="#" onclick="showSection('ogloszenia')">Ogłoszenia</a>
+    <a href="#" onclick="showSection('hymn')">Hymn Polski</a>
+    <a href="#" onclick="showSection('regulamin')">Regulamin</a>
+    <a href="#" onclick="showSection('kontakt')">Kontakt</a>
+    <button onclick="showLogin()">Panel właściciela</button>
+  </nav>
 
-<nav id="navBar" class="hidden">
-  <a href="#home" onclick="showSection('home')">Strona główna</a>
-  <a href="#aktualnosci" onclick="showSection('aktualnosci')">Aktualności</a>
-  <a href="#rekrutacja" onclick="showSection('rekrutacja')">Rekrutacja</a>
-  <a href="#hymn" onclick="showSection('hymn')">Hymn Polski</a>
-  <a href="#kontakt" onclick="showSection('kontakt')">Kontakt</a>
-  <a href="#pliki" onclick="showSection('pliki')">Pliki do pobrania</a>
-  <a href="#admin" id="adminTab" class="hidden" onclick="showSection('admin')">Panel właściciela</a>
-  <button onclick="logout()" class="btn small">Wyloguj</button>
-</nav>
+  <main class="container">
+    <section id="home" class="card">
+      <h2>Witamy w Rzeczpospolitej Polskiej RP</h2>
+      <p>To oficjalna strona projektu RP w Roblox. Znajdziesz tu ogłoszenia, aktualności i ważne informacje.</p>
+    </section>
 
-<main class="container">
+    <section id="aktualnosci" class="card hidden">
+      <h2>Aktualności</h2>
+      <div id="aktualnosciLista"></div>
+    </section>
 
-<!-- Logowanie -->
-<section id="loginSection" class="card section active">
-  <h2>Logowanie</h2>
-  <form id="loginForm">
-    <label>Login:</label>
-    <input type="text" id="loginName" required>
-    <label>Hasło:</label>
-    <input type="password" id="loginPass" required>
-    <button type="submit" class="btn">Zaloguj</button>
-  </form>
-  <p>Nie masz konta? <a href="#" onclick="showRegister()">Zarejestruj się</a></p>
-  <p id="loginError" class="error"></p>
-</section>
+    <section id="ogloszenia" class="card hidden">
+      <h2>Ogłoszenia</h2>
+      <div id="ogloszeniaLista"></div>
+    </section>
 
-<!-- Rejestracja krok po kroku -->
-<section id="registerSection" class="card section hidden">
-  <h2>Rejestracja nowego gracza</h2>
-  <div id="step1" class="step">
-    <h3>Krok 1: Podstawowe dane</h3>
-    <label>Login:</label>
-    <input type="text" id="regName" required>
-    <label>Hasło:</label>
-    <input type="password" id="regPass" required>
-    <button class="btn" onclick="nextStep(1)">Dalej</button>
-  </div>
-  <div id="step2" class="step hidden">
-    <h3>Krok 2: Dane osobowe</h3>
-    <label>Nick w grze:</label>
-    <input type="text" id="regNick" required>
-    <label>Wiek:</label>
-    <input type="number" id="regWiek" required>
-    <button class="btn" onclick="prevStep(2)">Wstecz</button>
-    <button class="btn" onclick="nextStep(2)">Dalej</button>
-  </div>
-  <div id="step3" class="step hidden">
-    <h3>Krok 3: Preferencje</h3>
-    <label>Lokalizacja:</label>
-    <input type="text" id="regMiasto" required>
-    <label>Ulubiona rola:</label>
-    <input type="text" id="regRola" required>
-    <button class="btn" onclick="prevStep(3)">Wstecz</button>
-    <button class="btn" id="finishRegister">Zarejestruj</button>
-  </div>
-  <p>Masz już konto? <a href="#" onclick="showLogin()">Zaloguj się</a></p>
-  <p id="registerMsg"></p>
-</section>
+    <section id="hymn" class="card hidden">
+      <h2>Hymn Polski</h2>
+      <pre id="hymnTekst">Jeszcze Polska nie zginęła, Kiedy my żyjemy...</pre>
+      <div id="hymnNagranie"></div>
+    </section>
 
-<!-- Strona główna -->
-<section id="home" class="card section hidden">
-  <h2>Witamy w Rzeczpospolitej Polskiej RP</h2>
-  <p>Oficjalna strona projektu RP. Czytaj aktualności, dołącz do rekrutacji i śledź ogłoszenia!</p>
-  <h3>Ogłoszenia</h3>
-  <div id="homeOgloszenia"></div>
-  <h3>Aktualności</h3>
-  <div id="homeAktualnosci"></div>
-  <h3>Zdjęcia</h3>
-  <div id="homeZdjecia"></div>
-</section>
+    <section id="regulamin" class="card hidden">
+      <h2>Regulamin projektu</h2>
+      <div id="regulaminPlik"></div>
+    </section>
 
-<!-- Aktualności -->
-<section id="aktualnosci" class="card section hidden">
-  <h2>Aktualności</h2>
-  <div id="aktualnosciLista"></div>
-</section>
+    <section id="kontakt" class="card hidden">
+      <h2>Kontakt</h2>
+      <p>Właściciel: <b>Arnol_Game</b></p>
+      <p>Discord: <a href="https://discord.gg/5aZqgpErnc" target="_blank">Kliknij, aby dołączyć</a></p>
+      <p>Email: <a href="mailto:arnol_game@example.com">arnol_game@example.com</a></p>
+    </section>
 
-<!-- Rekrutacja -->
-<section id="rekrutacja" class="card section hidden">
-  <h2>Rekrutacja do projektu RP</h2>
-  <form id="rekrutacjaForm">
-    <label>Nick w grze:</label>
-    <input id="rekrutNick" required>
-    <label>Dlaczego chcesz dołączyć?</label>
-    <textarea id="rekrutText" rows="4" required></textarea>
-    <button type="submit" class="btn">Wyślij rekrutację</button>
-  </form>
-  <p id="rekrutMessage"></p>
-</section>
+    <section id="adminPanel" class="card hidden">
+      <h2>Panel właściciela</h2>
+      <button class="btn" onclick="addAktualnosc()">Dodaj aktualność</button>
+      <button class="btn" onclick="addOgloszenie()">Dodaj ogłoszenie</button>
+      <button class="btn" onclick="editHymn()">Edytuj hymn</button>
+      <button class="btn" onclick="addHymnLink()">Dodaj link do nagrania</button>
+      <button class="btn" onclick="addRegulamin()">Dodaj plik regulaminu</button>
+      <button class="btn" onclick="logout()">Wyloguj</button>
+    </section>
 
-<!-- Hymn Polski -->
-<section id="hymn" class="card section hidden">
-  <h2>Hymn Polski</h2>
-  <div id="hymnTekst"></div>
-  <button class="btn hidden" id="editHymnBtn" onclick="edytujHymn()">Edytuj hymn</button>
-</section>
+    <section id="loginPanel" class="card hidden">
+      <h2>Logowanie właściciela</h2>
+      <input type="text" id="adminLogin" placeholder="Login">
+      <input type="password" id="adminPass" placeholder="Hasło">
+      <button class="btn" onclick="adminLogin()">Zaloguj</button>
+      <p id="loginError" class="error"></p>
+    </section>
+  </main>
 
-<!-- Kontakt -->
-<section id="kontakt" class="card section hidden">
-  <h2>Kontakt</h2>
-  <p>Właściciel: <strong>Arnol_Game</strong></p>
-  <p>Napisz e-mail: <a href="mailto:arnol_game@example.com">arnol_game@example.com</a></p>
-  <p>Dołącz do Discord: <a href="https://discord.gg/5aZqgpErnc" target="_blank">Kliknij tutaj</a></p>
-</section>
+  <footer>© 2025 Rzeczpospolita Polska RP</footer>
 
-<!-- Pliki do pobrania -->
-<section id="pliki" class="card section hidden">
-  <h2>Pliki do pobrania</h2>
-  <div id="plikiLista"></div>
-</section>
-
-<!-- Panel właściciela -->
-<section id="admin" class="card section hidden">
-  <h2>Panel Właściciela</h2>
-  <button class="btn" onclick="addAktualnosc()">Dodaj aktualność</button>
-  <button class="btn" onclick="addOgloszenie()">Dodaj ogłoszenie</button>
-  <button class="btn" onclick="addZdjecie()">Dodaj zdjęcie</button>
-  <button class="btn" onclick="addPlik()">Dodaj plik do pobrania</button>
-  <h3>Rekrutacje:</h3>
-  <div id="adminRekrutacje"></div>
-</section>
-
-</main>
-<footer class="site-footer">© 2025 Rzeczpospolita Polska RP</footer>
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
