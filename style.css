@@ -1,15 +1,14 @@
 :root {
   --primary: #d4213d;
   --primary-dark: #a81528;
-  --accent: #f7f0f0;
-  --light-bg: #fdf6f0;
+  --light-bg: #f9f9f9;
 }
 
 body {
   font-family: "Segoe UI", sans-serif;
+  background: var(--light-bg);
   margin: 0;
   padding: 0;
-  background: var(--light-bg);
   color: #222;
 }
 
@@ -28,21 +27,21 @@ header img {
 
 nav {
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
+  gap: 10px;
   background: #eee;
   padding: 10px;
+  flex-wrap: wrap;
 }
 
 nav a, nav button {
   text-decoration: none;
-  color: #333;
+  color: #222;
   font-weight: 600;
-  padding: 8px 14px;
+  padding: 8px 16px;
   border-radius: 8px;
-  background: transparent;
   border: none;
+  background: transparent;
   transition: 0.3s;
 }
 
@@ -53,28 +52,25 @@ nav a:hover, nav button:hover {
 }
 
 .container {
+  max-width: 900px;
+  margin: 20px auto;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .card {
   background: white;
-  padding: 20px;
-  margin: 20px;
-  border-radius: 12px;
-  max-width: 900px;
-  width: 100%;
+  border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  transition: all 0.5s ease;
+  padding: 20px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.4s ease;
 }
 
 .btn {
   background: var(--primary);
   color: white;
   border: none;
-  padding: 10px 18px;
+  padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
@@ -84,50 +80,7 @@ nav a:hover, nav button:hover {
   background: var(--primary-dark);
 }
 
-/* Stopniowe animacje dla kroków rejestracji */
-.step {
-  opacity: 0;
-  transform: translateX(50px);
-  transition: all 0.5s ease;
-  display: none;
-}
-
-.step.active {
-  display: block;
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* Sekcje strony */
-.section {
-  display: none;
-}
-
-.section.active {
-  display: block;
-  animation: fadeIn 0.5s;
-}
-
-/* Animacja wchodzenia sekcji */
-@keyframes fadeIn {
-  from {opacity:0;}
-  to {opacity:1;}
-}
-
-/* Formularze i inputy */
-input, textarea {
-  width: 100%;
-  padding: 8px;
-  margin: 8px 0 12px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-  box-sizing: border-box;
-}
-
-textarea { resize: vertical; }
-
-.site-footer {
+footer {
   background: #222;
   color: white;
   text-align: center;
@@ -135,15 +88,15 @@ textarea { resize: vertical; }
   font-size: 14px;
 }
 
-.hidden { display: none; }
-.error { color: red; margin-top: 10px; }
-
-/* Animacja dodawania elementów */
-@keyframes popIn {
-  0% { transform: scale(0.5); opacity: 0;}
-  100% { transform: scale(1); opacity: 1;}
+.hidden {
+  display: none;
 }
 
-.pop {
-  animation: popIn 0.4s;
+.error {
+  color: red;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
