@@ -1,0 +1,149 @@
+:root {
+  --primary: #d4213d;
+  --primary-dark: #a81528;
+  --accent: #f7f0f0;
+  --light-bg: #fdf6f0;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: var(--light-bg);
+  color: #222;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  background: var(--primary);
+  color: white;
+  padding: 15px 25px;
+}
+
+header img {
+  height: 70px;
+  margin-right: 20px;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  background: #eee;
+  padding: 10px;
+}
+
+nav a, nav button {
+  text-decoration: none;
+  color: #333;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  transition: 0.3s;
+}
+
+nav a:hover, nav button:hover {
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+}
+
+.container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 12px;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: all 0.5s ease;
+}
+
+.btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+}
+
+/* Stopniowe animacje dla kroków rejestracji */
+.step {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 0.5s ease;
+  display: none;
+}
+
+.step.active {
+  display: block;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Sekcje strony */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+  animation: fadeIn 0.5s;
+}
+
+/* Animacja wchodzenia sekcji */
+@keyframes fadeIn {
+  from {opacity:0;}
+  to {opacity:1;}
+}
+
+/* Formularze i inputy */
+input, textarea {
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0 12px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+textarea { resize: vertical; }
+
+.site-footer {
+  background: #222;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 14px;
+}
+
+.hidden { display: none; }
+.error { color: red; margin-top: 10px; }
+
+/* Animacja dodawania elementów */
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0;}
+  100% { transform: scale(1); opacity: 1;}
+}
+
+.pop {
+  animation: popIn 0.4s;
+}
